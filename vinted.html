@@ -1,0 +1,189 @@
+<html><head><base href="https://vintagesneakercheck.io"><title>Vintage Sneaker Check - Neon Dark Mode</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6;
+    color: #e0e0e0;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #121212;
+    font-size: 18px;
+  }
+  h1 {
+    color: #09B1BA;
+    text-align: center;
+    font-size: 3em;
+    text-shadow: 0 0 10px #09B1BA;
+  }
+  .search-container, .filters-container, #result {
+    background-color: #1e1e1e;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 0 2px #09B1BA, 0 0 20px #09B1BA;
+    margin-bottom: 40px;
+  }
+  input[type="text"], select {
+    width: calc(100% - 32px);
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    font-size: 1em;
+    font-family: 'Montserrat', sans-serif;
+  }
+  button {
+    padding: 15px 30px;
+    background-color: #09B1BA;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+  button:hover {
+    background-color: #0891A1;
+    box-shadow: 0 0 15px #09B1BA;
+  }
+  .loading {
+    text-align: center;
+    color: #09B1BA;
+    font-size: 1.2em;
+  }
+  .filters-title {
+    margin-top: 0;
+    color: #09B1BA;
+    font-size: 1.8em;
+  }
+  .filter-group {
+    margin-bottom: 25px;
+  }
+  .filter-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #b0b0b0;
+    font-size: 1.1em;
+  }
+  .listing-links {
+    list-style-type: none;
+    padding: 0;
+  }
+  .listing-links li {
+    margin-bottom: 15px;
+  }
+  .listing-links a {
+    color: #09B1BA;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+  }
+  .listing-links a:hover {
+    text-decoration: underline;
+    text-shadow: 0 0 5px #09B1BA;
+  }
+  a {
+    color: #09B1BA;
+  }
+  h2, h3 {
+    color: #b0b0b0;
+  }
+  h2 {
+    font-size: 2em;
+  }
+  h3 {
+    font-size: 1.5em;
+  }
+</style></head><body>
+  <h1>Vintage Sneaker Check</h1>
+  <div class="search-container">
+    <input type="text" id="sneakerName" placeholder="Entrez le nom de la paire de sneakers">
+  </div>
+  
+  <div class="filters-container">
+    <h3 class="filters-title">Filtres</h3>
+    <div class="filter-group">
+      <label for="condition">État :</label>
+      <select id="condition">
+        <option value="">Tous les états</option>
+        <option value="status[]=6">Neuf avec étiquette</option>
+        <option value="status[]=1">Neuf sans étiquette</option>
+        <option value="status[]=2">Très bon état</option>
+        <option value="status[]=3">Bon état</option>
+        <option value="status[]=4">Satisfaisant</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="size">Taille :</label>
+      <select id="size">
+        <option value="">Toutes les tailles</option>
+        <option value="size_id[]=208">35</option>
+        <option value="size_id[]=209">36</option>
+        <option value="size_id[]=210">37</option>
+        <option value="size_id[]=211">38</option>
+        <option value="size_id[]=212">39</option>
+        <option value="size_id[]=213">40</option>
+        <option value="size_id[]=214">41</option>
+        <option value="size_id[]=215">42</option>
+        <option value="size_id[]=216">43</option>
+        <option value="size_id[]=217">44</option>
+        <option value="size_id[]=218">45</option>
+        <option value="size_id[]=219">46</option>
+      </select>
+    </div>
+  </div>
+  
+  <button onclick="searchSneaker()">Rechercher</button>
+  
+  <div id="result"></div>
+
+  <script>
+    function searchSneaker() {
+      const sneakerName = encodeURIComponent(document.getElementById('sneakerName').value);
+      const condition = document.getElementById('condition').value;
+      const size = document.getElementById('size').value;
+      const resultDiv = document.getElementById('result');
+      
+      resultDiv.innerHTML = '<p class="loading">Recherche en cours...</p>';
+      
+      // Construire l'URL de recherche Vinted avec les filtres
+      let searchUrl = `https://www.vinted.fr/catalog?search_text=${sneakerName}`;
+      if (condition) searchUrl += `&${condition}`;
+      if (size) searchUrl += `&${size}`;
+      
+      // Simulation des résultats
+      setTimeout(() => {
+        const fakeListings = Array.from({length: 10}, (_, i) => ({
+          id: 1000000 + i,
+          url: `${searchUrl}&item=${1000000 + i}`
+        }));
+        
+        const listingsHTML = fakeListings.map((listing, index) => `
+          <li>
+            <a href="${listing.url}" target="_blank">
+              Annonce ${index + 1}
+            </a>
+          </li>
+        `).join('');
+        
+        resultDiv.innerHTML = `
+          <h2>Résultats pour "${sneakerName}"</h2>
+          <p>Lien de recherche Vinted : <a href="${searchUrl}" target="_blank">Voir sur Vinted</a></p>
+          <h3>10 dernières annonces :</h3>
+          <ul class="listing-links">
+            ${listingsHTML}
+          </ul>
+          <p><em>Note : Ces résultats sont simulés. Les liens incluent maintenant les filtres sélectionnés dans l'URL de Vinted.</em></p>
+        `;
+      }, 1500);
+    }
+  </script>
+</body></html>
