@@ -16,27 +16,28 @@
     text-align: center;
     font-size: 3em;
     text-shadow: 0 0 10px #09B1BA;
+    margin-bottom: 40px;
   }
-  .search-container, .filters-container, #result {
+  .search-container, #result {
     background-color: #1e1e1e;
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 0 0 2px #09B1BA, 0 0 20px #09B1BA;
     margin-bottom: 40px;
   }
-  input[type="text"], select {
+  input[type="text"] {
     width: calc(100% - 32px);
-    padding: 15px;
+    padding: 20px;
     margin-bottom: 20px;
     border: 1px solid #333;
     border-radius: 8px;
     background-color: #2c2c2c;
     color: #e0e0e0;
-    font-size: 1em;
+    font-size: 1.2em;
     font-family: 'Montserrat', sans-serif;
   }
   button {
-    padding: 15px 30px;
+    padding: 20px 30px;
     background-color: #09B1BA;
     color: white;
     border: none;
@@ -57,41 +58,15 @@
     color: #09B1BA;
     font-size: 1.2em;
   }
-  .filters-title {
-    margin-top: 0;
-    color: #09B1BA;
-    font-size: 1.8em;
-  }
-  .filter-group {
-    margin-bottom: 25px;
-  }
-  .filter-group label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-    color: #b0b0b0;
-    font-size: 1.1em;
-  }
-  .listing-links {
-    list-style-type: none;
-    padding: 0;
-  }
-  .listing-links li {
-    margin-bottom: 15px;
-  }
-  .listing-links a {
+  a {
     color: #09B1BA;
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.1em;
     transition: all 0.3s ease;
   }
-  .listing-links a:hover {
+  a:hover {
     text-decoration: underline;
     text-shadow: 0 0 5px #09B1BA;
-  }
-  a {
-    color: #09B1BA;
   }
   h2, h3 {
     color: #b0b0b0;
@@ -102,88 +77,128 @@
   h3 {
     font-size: 1.5em;
   }
+  #searchLink {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 25px;
+    background-color: #09B1BA;
+    color: white;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  #searchLink:hover {
+    background-color: #0891A1;
+    box-shadow: 0 0 15px #09B1BA;
+    text-decoration: none;
+  }
+  #resultPage {
+    display: none;
+  }
+  .stat {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+  .stat-value {
+    color: #09B1BA;
+    font-weight: bold;
+  }
+  .listing-preview {
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+  }
+  .listing-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 15px;
+  }
+  .listing-details {
+    flex-grow: 1;
+  }
+  .listing-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .listing-price {
+    color: #09B1BA;
+    font-weight: bold;
+  }
 </style></head><body>
-  <h1>Vintage Sneaker Check</h1>
-  <div class="search-container">
-    <input type="text" id="sneakerName" placeholder="Entrez le nom de la paire de sneakers">
-  </div>
-  
-  <div class="filters-container">
-    <h3 class="filters-title">Filtres</h3>
-    <div class="filter-group">
-      <label for="condition">État :</label>
-      <select id="condition">
-        <option value="">Tous les états</option>
-        <option value="status[]=6">Neuf avec étiquette</option>
-        <option value="status[]=1">Neuf sans étiquette</option>
-        <option value="status[]=2">Très bon état</option>
-        <option value="status[]=3">Bon état</option>
-        <option value="status[]=4">Satisfaisant</option>
-      </select>
+  <div id="searchPage">
+    <h1>Vintage Sneaker Check</h1>
+    <div class="search-container">
+      <input type="text" id="sneakerName" placeholder="Entrez le nom de la paire de sneakers">
     </div>
-    <div class="filter-group">
-      <label for="size">Taille :</label>
-      <select id="size">
-        <option value="">Toutes les tailles</option>
-        <option value="size_id[]=208">35</option>
-        <option value="size_id[]=209">36</option>
-        <option value="size_id[]=210">37</option>
-        <option value="size_id[]=211">38</option>
-        <option value="size_id[]=212">39</option>
-        <option value="size_id[]=213">40</option>
-        <option value="size_id[]=214">41</option>
-        <option value="size_id[]=215">42</option>
-        <option value="size_id[]=216">43</option>
-        <option value="size_id[]=217">44</option>
-        <option value="size_id[]=218">45</option>
-        <option value="size_id[]=219">46</option>
-      </select>
-    </div>
+    
+    <button onclick="searchSneaker()">Rechercher</button>
   </div>
-  
-  <button onclick="searchSneaker()">Rechercher</button>
-  
-  <div id="result"></div>
+
+  <div id="resultPage">
+    <h1>Résultats de la recherche</h1>
+    <div id="result" class="search-container"></div>
+    <button onclick="backToSearch()">Nouvelle recherche</button>
+  </div>
 
   <script>
     function searchSneaker() {
       const sneakerName = encodeURIComponent(document.getElementById('sneakerName').value);
-      const condition = document.getElementById('condition').value;
-      const size = document.getElementById('size').value;
       const resultDiv = document.getElementById('result');
       
       resultDiv.innerHTML = '<p class="loading">Recherche en cours...</p>';
       
-      // Construire l'URL de recherche Vinted avec les filtres
+      // Construire l'URL de recherche Vinted
       let searchUrl = `https://www.vinted.fr/catalog?search_text=${sneakerName}`;
-      if (condition) searchUrl += `&${condition}`;
-      if (size) searchUrl += `&${size}`;
       
       // Simulation des résultats
       setTimeout(() => {
-        const fakeListings = Array.from({length: 10}, (_, i) => ({
-          id: 1000000 + i,
-          url: `${searchUrl}&item=${1000000 + i}`
+        // Simuler un nombre d'annonces aléatoire entre 10 et 100
+        const numberOfListings = Math.floor(Math.random() * (100 - 10 + 1)) + 10;
+        
+        // Simuler les prix des 5 dernières annonces
+        const lastFiveListings = Array.from({length: 5}, () => ({
+          title: `${decodeURIComponent(sneakerName)} - ${['Noir', 'Blanc', 'Rouge', 'Bleu', 'Vert'][Math.floor(Math.random() * 5)]}`,
+          price: Math.floor(Math.random() * (200 - 50 + 1)) + 50,
+          size: Math.floor(Math.random() * (46 - 35 + 1)) + 35,
+          condition: ['Neuf', 'Très bon état', 'Bon état', 'Satisfaisant'][Math.floor(Math.random() * 4)],
+          image: `https://picsum.photos/seed/${Math.random()}/100/100`
         }));
         
-        const listingsHTML = fakeListings.map((listing, index) => `
-          <li>
-            <a href="${listing.url}" target="_blank">
-              Annonce ${index + 1}
-            </a>
-          </li>
+        const averagePrice = (lastFiveListings.reduce((a, b) => a + b.price, 0) / 5).toFixed(2);
+        
+        document.getElementById('searchPage').style.display = 'none';
+        document.getElementById('resultPage').style.display = 'block';
+        
+        let listingsHtml = lastFiveListings.map(listing => `
+          <div class="listing-preview">
+            <img src="${listing.image}" alt="${listing.title}" class="listing-image">
+            <div class="listing-details">
+              <div class="listing-title">${listing.title}</div>
+              <div>Taille: ${listing.size}</div>
+              <div>État: ${listing.condition}</div>
+              <div class="listing-price">${listing.price}€</div>
+            </div>
+          </div>
         `).join('');
         
         resultDiv.innerHTML = `
-          <h2>Résultats pour "${sneakerName}"</h2>
-          <p>Lien de recherche Vinted : <a href="${searchUrl}" target="_blank">Voir sur Vinted</a></p>
-          <h3>10 dernières annonces :</h3>
-          <ul class="listing-links">
-            ${listingsHTML}
-          </ul>
-          <p><em>Note : Ces résultats sont simulés. Les liens incluent maintenant les filtres sélectionnés dans l'URL de Vinted.</em></p>
+          <h2>Résultats pour "${decodeURIComponent(sneakerName)}"</h2>
+          <p class="stat">Nombre d'annonces disponibles : <span class="stat-value">${numberOfListings}</span></p>
+          <p class="stat">Prix moyen des 5 dernières annonces : <span class="stat-value">${averagePrice}€</span></p>
+          <h3>Aperçu des 5 dernières annonces :</h3>
+          ${listingsHtml}
+          <a href="${searchUrl}" target="_blank" id="searchLink">Voir tous les résultats sur Vinted</a>
         `;
       }, 1500);
+    }
+
+    function backToSearch() {
+      document.getElementById('searchPage').style.display = 'block';
+      document.getElementById('resultPage').style.display = 'none';
     }
   </script>
 </body></html>
