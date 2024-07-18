@@ -86,6 +86,17 @@
     font-weight: bold;
     margin-top: 20px;
   }
+  .source-link {
+    margin-top: 30px;
+    font-size: 0.9em;
+  }
+  .source-link a {
+    color: #09B1BA;
+    text-decoration: none;
+  }
+  .source-link a:hover {
+    text-decoration: underline;
+  }
 </style></head><body>
   <div id="searchPage" class="active">
     <h1>Vintage Sneaker Check</h1>
@@ -122,6 +133,8 @@
           `<li>Annonce ${index + 1}: ${price} €</li>`
         ).join('');
         
+        const searchUrl = `https://www.vinted.fr/catalog?search_text=${encodeURIComponent(sneakerName)}`;
+        
         resultDiv.innerHTML = `
           <h2>Résultat pour "${sneakerName}"</h2>
           <p>Prix des 5 dernières annonces :</p>
@@ -130,6 +143,7 @@
           </ul>
           <p class="average-price">Prix moyen : ${averagePrice.toFixed(2)} €</p>
           <p><em>Note: Ces prix sont simulés. Dans une application réelle, ils seraient obtenus en analysant les vraies annonces de Vinted.</em></p>
+          <p class="source-link">Source des données : <a href="${searchUrl}" target="_blank">${searchUrl}</a></p>
         `;
       }, 2000);
     }
