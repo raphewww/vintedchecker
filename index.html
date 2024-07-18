@@ -1,4 +1,4 @@
-<html><head><base href="https://vintagesneakercheck.io"><title>Vintage Sneaker Check - Neon Dark Mode</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html><head><base href="https://vintagesneakercheck.io"><title>Vintage Sneaker Check - Prix Moyen</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 <style>
   body {
@@ -16,7 +16,6 @@
     text-align: center;
     font-size: 3em;
     text-shadow: 0 0 10px #09B1BA;
-    margin-bottom: 40px;
   }
   .search-container, #result {
     background-color: #1e1e1e;
@@ -27,17 +26,17 @@
   }
   input[type="text"] {
     width: calc(100% - 32px);
-    padding: 20px;
+    padding: 15px;
     margin-bottom: 20px;
     border: 1px solid #333;
     border-radius: 8px;
     background-color: #2c2c2c;
     color: #e0e0e0;
-    font-size: 1.2em;
+    font-size: 1em;
     font-family: 'Montserrat', sans-serif;
   }
   button {
-    padding: 20px 30px;
+    padding: 15px 30px;
     background-color: #09B1BA;
     color: white;
     border: none;
@@ -58,147 +57,87 @@
     color: #09B1BA;
     font-size: 1.2em;
   }
-  a {
-    color: #09B1BA;
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.3s ease;
-  }
-  a:hover {
-    text-decoration: underline;
-    text-shadow: 0 0 5px #09B1BA;
-  }
-  h2, h3 {
-    color: #b0b0b0;
-  }
-  h2 {
-    font-size: 2em;
-  }
-  h3 {
-    font-size: 1.5em;
-  }
-  #searchLink {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 15px 25px;
-    background-color: #09B1BA;
-    color: white;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
-  #searchLink:hover {
-    background-color: #0891A1;
-    box-shadow: 0 0 15px #09B1BA;
-    text-decoration: none;
-  }
-  #resultPage {
+  #searchPage, #resultsPage {
     display: none;
   }
-  .stat {
-    font-size: 1.2em;
-    margin-bottom: 15px;
+  #searchPage.active, #resultsPage.active {
+    display: block;
   }
-  .stat-value {
+  #result {
+    text-align: center;
+    font-size: 1.5em;
     color: #09B1BA;
-    font-weight: bold;
+    padding: 30px 0;
   }
-  .listing-preview {
+  .price-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: left;
+  }
+  .price-list li {
+    margin-bottom: 10px;
     background-color: #2c2c2c;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
   }
-  .listing-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-right: 15px;
-  }
-  .listing-details {
-    flex-grow: 1;
-  }
-  .listing-title {
+  .average-price {
+    font-size: 1.2em;
     font-weight: bold;
-    margin-bottom: 5px;
-  }
-  .listing-price {
-    color: #09B1BA;
-    font-weight: bold;
+    margin-top: 20px;
   }
 </style></head><body>
-  <div id="searchPage">
+  <div id="searchPage" class="active">
     <h1>Vintage Sneaker Check</h1>
     <div class="search-container">
       <input type="text" id="sneakerName" placeholder="Entrez le nom de la paire de sneakers">
     </div>
     
-    <button onclick="searchSneaker()">Rechercher</button>
+    <button onclick="searchSneaker()">Rechercher le prix moyen</button>
   </div>
 
-  <div id="resultPage">
-    <h1>Résultats de la recherche</h1>
-    <div id="result" class="search-container"></div>
+  <div id="resultsPage">
+    <h1>Résultats de recherche</h1>
+    <div id="result"></div>
     <button onclick="backToSearch()">Nouvelle recherche</button>
   </div>
 
   <script>
     function searchSneaker() {
-      const sneakerName = encodeURIComponent(document.getElementById('sneakerName').value);
+      const sneakerName = document.getElementById('sneakerName').value;
       const resultDiv = document.getElementById('result');
       
-      resultDiv.innerHTML = '<p class="loading">Recherche en cours...</p>';
+      document.getElementById('searchPage').classList.remove('active');
+      document.getElementById('resultsPage').classList.add('active');
       
-      // Construire l'URL de recherche Vinted
-      let searchUrl = `https://www.vinted.fr/catalog?search_text=${sneakerName}`;
+      resultDiv.innerHTML = '<p class="loading">Recherche des prix en cours...</p>';
       
-      // Simulation des résultats
+      // Simulation de la recherche et du calcul du prix moyen
       setTimeout(() => {
-        // Simuler un nombre d'annonces aléatoire entre 10 et 100
-        const numberOfListings = Math.floor(Math.random() * (100 - 10 + 1)) + 10;
+        // Ces prix sont simulés
+        const prices = [85, 92, 78, 105, 88];
+        const averagePrice = prices.reduce((a, b) => a + b, 0) / prices.length;
         
-        // Simuler les prix des 5 dernières annonces
-        const lastFiveListings = Array.from({length: 5}, () => ({
-          title: `${decodeURIComponent(sneakerName)} - ${['Noir', 'Blanc', 'Rouge', 'Bleu', 'Vert'][Math.floor(Math.random() * 5)]}`,
-          price: Math.floor(Math.random() * (200 - 50 + 1)) + 50,
-          size: Math.floor(Math.random() * (46 - 35 + 1)) + 35,
-          condition: ['Neuf', 'Très bon état', 'Bon état', 'Satisfaisant'][Math.floor(Math.random() * 4)],
-          image: `https://picsum.photos/seed/${Math.random()}/100/100`
-        }));
-        
-        const averagePrice = (lastFiveListings.reduce((a, b) => a + b.price, 0) / 5).toFixed(2);
-        
-        document.getElementById('searchPage').style.display = 'none';
-        document.getElementById('resultPage').style.display = 'block';
-        
-        let listingsHtml = lastFiveListings.map(listing => `
-          <div class="listing-preview">
-            <img src="${listing.image}" alt="${listing.title}" class="listing-image">
-            <div class="listing-details">
-              <div class="listing-title">${listing.title}</div>
-              <div>Taille: ${listing.size}</div>
-              <div>État: ${listing.condition}</div>
-              <div class="listing-price">${listing.price}€</div>
-            </div>
-          </div>
-        `).join('');
+        const pricesListHTML = prices.map((price, index) => 
+          `<li>Annonce ${index + 1}: ${price} €</li>`
+        ).join('');
         
         resultDiv.innerHTML = `
-          <h2>Résultats pour "${decodeURIComponent(sneakerName)}"</h2>
-          <p class="stat">Nombre d'annonces disponibles : <span class="stat-value">${numberOfListings}</span></p>
-          <p class="stat">Prix moyen des 5 dernières annonces : <span class="stat-value">${averagePrice}€</span></p>
-          <h3>Aperçu des 5 dernières annonces :</h3>
-          ${listingsHtml}
-          <a href="${searchUrl}" target="_blank" id="searchLink">Voir tous les résultats sur Vinted</a>
+          <h2>Résultat pour "${sneakerName}"</h2>
+          <p>Prix des 5 dernières annonces :</p>
+          <ul class="price-list">
+            ${pricesListHTML}
+          </ul>
+          <p class="average-price">Prix moyen : ${averagePrice.toFixed(2)} €</p>
+          <p><em>Note: Ces prix sont simulés. Dans une application réelle, ils seraient obtenus en analysant les vraies annonces de Vinted.</em></p>
         `;
-      }, 1500);
+      }, 2000);
     }
 
     function backToSearch() {
-      document.getElementById('searchPage').style.display = 'block';
-      document.getElementById('resultPage').style.display = 'none';
+      document.getElementById('searchPage').classList.add('active');
+      document.getElementById('resultsPage').classList.remove('active');
+      document.getElementById('sneakerName').value = '';
     }
   </script>
 </body></html>
